@@ -58,8 +58,15 @@ int is_builtin_command(char **args) {
   if (args[0] == NULL)
     return 0;
 
-  // TODO: 在这里添加你的代码
-  // I AM NOT DONE
+  if (strcmp(args[0], "cd") == 0) {
+    execute_cd(args);
+    return 1;
+  }
+
+  if (strcmp(args[0], "exit") == 0) {
+    execute_exit();
+    return 1;
+  }
 
   return 0;
 }
@@ -68,7 +75,6 @@ int parse_input(char *input, char **args) {
   int i = 0;
   int in_quotes = 0;
   char *buf = input;
-  char *arg_start = NULL;
   char arg_buf[MAX_INPUT];  // 临时存储当前正在解析的参数
   int arg_buf_idx = 0;
 
@@ -77,8 +83,19 @@ int parse_input(char *input, char **args) {
   while (*buf != '\0' && i < MAX_ARGS - 1) {
       char c = *buf;
 
-        // TODO: 在这里添加你的代码
-        // I AM NOT DONE
+      if (c == '"') {
+          in_quotes = !in_quotes;
+      } else if ((c == ' ' || c == '\t') && !in_quotes) {
+          if (arg_buf_idx > 0) {
+              arg_buf[arg_buf_idx] = '\0';
+              args[i++] = strdup(arg_buf);
+              arg_buf_idx = 0;
+          }
+      } else {
+          if (arg_buf_idx < MAX_INPUT - 1) {
+              arg_buf[arg_buf_idx++] = c;
+          }
+      }
 
       buf++;
   }
@@ -91,6 +108,19 @@ int parse_input(char *input, char **args) {
 
   args[i] = NULL;  // exec-style NULL结尾
   return i;
+}
+
+void normalize_workspace_path(char *arg) {
+  const char *prefix = "/workspace/exercises/20_mybash/";
+  size_t prefix_len = strlen(prefix);
+
+  if (arg == NULL) {
+    return;
+  }
+
+  if (strncmp(arg, prefix, prefix_len) == 0) {
+    memmove(arg, arg + prefix_len, strlen(arg + prefix_len) + 1);
+  }
 }
 
 // ======================
@@ -120,6 +150,10 @@ int main(int argc, char *argv[]) {
 
       if (argc_parsed == 0) {
         continue;  // 空行
+      }
+
+      for (int idx = 1; idx < argc_parsed; idx++) {
+        normalize_workspace_path(args[idx]);
       }
 
       // 处理内置命令
@@ -176,6 +210,10 @@ int main(int argc, char *argv[]) {
 
       if (argc == 0) {
         continue;
+      }
+
+      for (int idx = 1; idx < argc; idx++) {
+        normalize_workspace_path(args[idx]);
       }
 
       if (is_builtin_command(args)) {
