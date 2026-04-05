@@ -8,24 +8,29 @@
 
 PWD := $(shell pwd)
 
+# 所有子模块目录（静态库：生成 .a）
 SUBDIRS := \
 	mysed \
 	myfile \
 	mywc \
 	mytrans
 
+# 默认目标：构建 mybash（依赖其他库）
 all: mybash
 
+# 通用规则：构建每个子模块（静态库）
 $(SUBDIRS):
-	$(MAKE) -C src/$@ OBJDIR=$(PWD)/obj/$@
+    # TODO: 在这里添加你的代码
+    # I AM NOT DONE
 
+# 构建 mybash（可执行文件，依赖上面的库）
 mybash: $(SUBDIRS)
-	$(MAKE) -C src/mybash OBJDIR=$(PWD)/obj/mybash BINDIR=$(PWD)/bin LINKLIBS="-L$(PWD)/obj/mysed -L$(PWD)/obj/mywc -L$(PWD)/obj/mytrans -L$(PWD)/obj/myfile"
+	# TODO: 在这里添加你的代码
+    # I AM NOT DONE
 
+# 清理所有生成的文件
 clean:
-	$(MAKE) -C src/mysed clean
-	$(MAKE) -C src/myfile clean
-	$(MAKE) -C src/mywc clean
-	$(MAKE) -C src/mytrans clean
-	$(MAKE) -C src/mybash clean
-	rm -rf obj bin
+    # TODO: 在这里添加你的代码
+    # I AM NOT DONE
+
+.PHONY: all $(SUBDIRS) mybash clean

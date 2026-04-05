@@ -7,22 +7,8 @@
 #include <string.h>
 
 void trim(char *str) {
-    char *start = str;
-    while (*start == ' ' || *start == '\t' || *start == '\n' || *start == '\r') {
-        start++;
-    }
-
-    char *end = start + strlen(start);
-    while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t' || *(end - 1) == '\n' || *(end - 1) == '\r')) {
-        end--;
-    }
-
-    if (start != str) {
-        memmove(str, start, end - start);
-        str[end - start] = '\0';
-    } else {
-        *end = '\0';
-    }
+    // TODO: 在这里添加你的代码
+    // I AM NOT DONE
 }
 
 int load_dictionary(const char *filename, HashTable *table,
@@ -35,24 +21,11 @@ int load_dictionary(const char *filename, HashTable *table,
 
   char line[1024];
   char current_word[100] = {0};
+  char current_translation[1024] = {0};
+  int in_entry = 0;
 
-  while (fgets(line, sizeof(line), file) != NULL) {
-    trim(line);
-
-    if (line[0] == '#' && line[1] != '\0') {
-      strncpy(current_word, line + 1, sizeof(current_word) - 1);
-      current_word[sizeof(current_word) - 1] = '\0';
-    } else if (strncmp(line, "Trans:", 6) == 0) {
-      char *translation = line + 6;
-      trim(translation);
-
-      if (current_word[0] != '\0' && translation[0] != '\0') {
-        hash_table_insert(table, current_word, translation);
-        (*dict_count)++;
-      }
-      current_word[0] = '\0';
-    }
-  }
+    // TODO: 在这里添加你的代码
+    // I AM NOT DONE
 
   fclose(file);
   return 0;
@@ -72,7 +45,7 @@ int __cmd_mytrans(const char* filename) {
 
   printf("=== 哈希表版英语翻译器（支持百万级数据）===\n");
   uint64_t dict_count = 0;
-  if (load_dictionary("src/mytrans/dict.txt", table, &dict_count) != 0) {
+  if (load_dictionary("/workspace/exercises/20_mybash/src/mytrans/dict.txt", table, &dict_count) != 0) {
     fprintf(stderr, "加载词典失败，请确保 dict.txt 存在。\n");
     free_hash_table(table);
     return 1;

@@ -58,61 +58,38 @@ int is_builtin_command(char **args) {
   if (args[0] == NULL)
     return 0;
 
-  if (strcmp(args[0], "cd") == 0) {
-    execute_cd(args);
-    return 1;
-  }
-  if (strcmp(args[0], "exit") == 0) {
-    execute_exit();
-    return 1;
-  }
+  // TODO: 在这里添加你的代码
+  // I AM NOT DONE
 
   return 0;
 }
 
 int parse_input(char *input, char **args) {
   int i = 0;
-  char *buf = input;
-  char arg_buf[MAX_INPUT];
-  int arg_buf_idx = 0;
   int in_quotes = 0;
+  char *buf = input;
+  char *arg_start = NULL;
+  char arg_buf[MAX_INPUT];  // 临时存储当前正在解析的参数
+  int arg_buf_idx = 0;
 
   memset(arg_buf, 0, sizeof(arg_buf));
 
   while (*buf != '\0' && i < MAX_ARGS - 1) {
-    if (*buf == '"') {
-      in_quotes = !in_quotes;
+      char c = *buf;
+
+        // TODO: 在这里添加你的代码
+        // I AM NOT DONE
+
       buf++;
-      continue;
-    }
-
-    if (*buf == ' ' || *buf == '\t') {
-      if (in_quotes) {
-        if (arg_buf_idx < MAX_INPUT - 1) {
-          arg_buf[arg_buf_idx++] = *buf;
-        }
-      } else {
-        if (arg_buf_idx > 0) {
-          arg_buf[arg_buf_idx] = '\0';
-          args[i++] = strdup(arg_buf);
-          arg_buf_idx = 0;
-          memset(arg_buf, 0, sizeof(arg_buf));
-        }
-      }
-    } else {
-      if (arg_buf_idx < MAX_INPUT - 1) {
-        arg_buf[arg_buf_idx++] = *buf;
-      }
-    }
-    buf++;
   }
 
+  // 处理最后一个参数（循环结束后可能还有未加入的）
   if (arg_buf_idx > 0) {
-    arg_buf[arg_buf_idx] = '\0';
-    args[i++] = strdup(arg_buf);
+      arg_buf[arg_buf_idx] = '\0';
+      args[i++] = strdup(arg_buf);
   }
 
-  args[i] = NULL;
+  args[i] = NULL;  // exec-style NULL结尾
   return i;
 }
 
