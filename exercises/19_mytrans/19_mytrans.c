@@ -41,9 +41,21 @@ int main() {
         continue;
     }
 
-    // 使用 strtok 按空格分割单词
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    char word_copy[256];
+    strncpy(word_copy, line, sizeof(word_copy) - 1);
+    word_copy[sizeof(word_copy) - 1] = '\0';
+
+    char *token = strtok(word_copy, " \t\n");
+    while (token != NULL) {
+      to_lowercase(token);
+      const char *translation = hash_table_lookup(table, token);
+      if (translation) {
+        printf("原文: %s\t翻译: %s\n", token, translation);
+      } else {
+        printf("原文: %s\t未找到该单词的翻译。\n", token);
+      }
+      token = strtok(NULL, " \t\n");
+    }
   }
 
   free_hash_table(table);
