@@ -1,0 +1,5 @@
+myfile /nix/store/xx7cm72qy2c0643cm1ipngd87aqwkcdp-glibc-2.40-66/lib/libanl.so.1
+myfile /nix/store/xx7cm72qy2c0643cm1ipngd87aqwkcdp-glibc-2.40-66/lib/Mcrt1.o
+mysed s/linux/unix/ "linux is linux. unix is unix."
+mytrans src/mytrans/text.txt
+mywc src/mytrans/text.txt

@@ -19,8 +19,15 @@ OBJS := $(patsubst %.o,$(OBJDIR)/%.o,$(OBJS))
 
 all: $(LIB_PATH)
 
-# TODO: 在这里添加你的代码
-# I AM NOT DONE
+$(OBJDIR):
+	@mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o: %.c | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIB_PATH): $(OBJS)
+	@mkdir -p $(OBJDIR)
+	ar rcs $@ $^
 
 clean:
 	@rm -rf $(OBJDIR)/*.o $(LIB_PATH)
