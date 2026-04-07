@@ -34,7 +34,16 @@ int __cmd_myfile(const char* filename) {
     int fd;
     Elf64_Ehdr ehdr;
 
-    strcpy(filepath, filename);
+    if (filename == NULL) {
+      fprintf(stderr, "myfile: filename is NULL\n");
+      return 1;
+    }
+
+    if (snprintf(filepath, sizeof(filepath), "%s", filename) >= (int)sizeof(filepath)) {
+      fprintf(stderr, "myfile: filename is too long\n");
+      return 1;
+    }
+
     fflush(stdout);
     printf("filepath: %s\n", filepath);
 
