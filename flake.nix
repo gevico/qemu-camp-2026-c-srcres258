@@ -29,6 +29,24 @@
             clang-tools
           ];
         };
+
+        devShells.ci = pkgs.mkShell {
+          packages = with pkgs; [
+            bashInteractive
+            coreutils
+            gcc
+            gnumake
+            jq
+          ];
+
+          shellHook = ''
+            export CI=true
+            export DEBIAN_FRONTEND=noninteractive
+            export GIT_TERMINAL_PROMPT=0
+            export GIT_PAGER=cat
+            export PAGER=cat
+          '';
+        };
       }
     );
 }
