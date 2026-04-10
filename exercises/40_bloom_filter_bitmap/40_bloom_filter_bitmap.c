@@ -13,39 +13,94 @@ typedef struct {
 } Bloom;
 
 static Bloom *bloom_create(size_t m) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    Bloom *bf;
+    size_t bytes;
+
+    if (m == 0) {
+        return NULL;
+    }
+
+    bf = (Bloom *)malloc(sizeof(Bloom));
+    if (!bf) {
+        return NULL;
+    }
+
+    bytes = (m + 7) / 8;
+    bf->bits = (unsigned char *)calloc(bytes, sizeof(unsigned char));
+    if (!bf->bits) {
+        free(bf);
+        return NULL;
+    }
+
+    bf->m = m;
+    return bf;
 }
 
 static void bloom_free(Bloom *bf) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    if (!bf) {
+        return;
+    }
+
+    free(bf->bits);
+    free(bf);
 }
 
 /* 位操作 */
 static void set_bit(unsigned char *bm, size_t idx) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    size_t byte_index = idx / 8;
+    size_t bit_offset = idx % 8;
+
+    bm[byte_index] |= (unsigned char)(1u << bit_offset);
 }
+
 static int test_bit(const unsigned char *bm, size_t idx) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    size_t byte_index = idx / 8;
+    size_t bit_offset = idx % 8;
+
+    return (bm[byte_index] & (unsigned char)(1u << bit_offset)) != 0 ? 1 : 0;
 }
 
 /* 三个简单哈希：sum(c*k) % m */
 static size_t hash_k(const char *s, size_t m, int k) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    const unsigned char *p = (const unsigned char *)s;
+    size_t sum = 0;
+
+    while (*p != '\0') {
+        sum += (size_t)(*p) * (size_t)k;
+        p++;
+    }
+
+    return sum % m;
 }
 
 static void bloom_add(Bloom *bf, const char *s) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    int k;
+
+    if (!bf || !bf->bits || !s) {
+        return;
+    }
+
+    for (k = 1; k <= 3; k++) {
+        size_t idx = hash_k(s, bf->m, k);
+        set_bit(bf->bits, idx);
+    }
 }
 
 static int bloom_maybe_contains(Bloom *bf, const char *s) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    int k;
+
+    if (!bf || !bf->bits || !s) {
+        return 0;
+    }
+
+    for (k = 1; k <= 3; k++) {
+        size_t idx = hash_k(s, bf->m, k);
+        if (!test_bit(bf->bits, idx)) {
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 int main(void) {
