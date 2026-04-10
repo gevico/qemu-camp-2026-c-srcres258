@@ -12,10 +12,9 @@
         pkgs = import nixpkgs {
           inherit system;
         };
-
-        fhsEnv = pkgs.buildFHSEnv {
-          name = "qemu-camp-fhs";
-          targetPkgs = pkgs': with pkgs'; [
+      in {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
             bashInteractive
             coreutils
             findutils
@@ -29,10 +28,7 @@
             curl
             clang-tools
           ];
-          runScript = "bash";
         };
-      in {
-        devShells.default = fhsEnv.env;
       }
     );
 }
